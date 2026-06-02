@@ -1,0 +1,16 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // 학교 프로젝트용 기본 규칙입니다.
+    // 로그인한 사용자만 읽고 쓸 수 있게 제한합니다.
+    // 실제 서비스라면 seats, reservations의 변경 가능한 필드를 더 엄격하게 제한해야 합니다.
+    match /{document=**} {
+      allow read, write: if signedIn();
+    }
+  }
+}
