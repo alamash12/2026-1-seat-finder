@@ -1213,3 +1213,16 @@ input:focus {
   cursor: grabbing;
 }
 
+.timer-ring-away {
+  margin-top: 16px !important;
+}
+ 
+.timer-track-away {
+  stroke: #fdeec9 !important;
+}
+ 
+.timer-progress-away {
+  stroke: var(--away) !important;
+  filter: drop-shadow(0 8px 16px rgba(242, 181, 68, 0.28)) !important;
+}
+ 
