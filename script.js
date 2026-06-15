@@ -470,6 +470,8 @@ const manageMessage = document.querySelector("#manageMessage");
 const returnButton = document.querySelector("#returnButton");
 const leaveButton = document.querySelector("#leaveButton");
 const extendButton = document.querySelector("#extendButton");
+const extensionGuide = document.querySelector(".extension-guide");
+const manageActions = document.querySelector(".manage-actions");
 const confirmModal = document.querySelector("#confirmModal");
 const awayModal = document.querySelector("#awayModal");
 const returnAwayModal = document.querySelector("#returnAwayModal");
@@ -914,6 +916,11 @@ async function renderReservation() {
     leaveButton.disabled = true;
     leaveButton.textContent = "외출하기";
     extendButton.disabled = true;
+    extendButton.textContent = "연장하기";
+    extendButton.classList.remove("return-away-mode");
+    extensionGuide.textContent = "남은 시간이 1시간 이하일 때 연장할 수 있습니다.";
+    manageActions.classList.remove("away-mode");
+    bottomSheet.classList.remove("away-mode");
 
     reservationBar.classList.remove("hidden");
     managePanel.classList.add("hidden");
@@ -930,6 +937,7 @@ async function renderReservation() {
 
   const room = ROOMS.find((item) => item.id === reservation.roomId);
   const isAway = reservation.status === "away";
+  bottomSheet.classList.toggle("away-mode", isAway);
 
   myRoomTitle.textContent = room.name;
   mySeatTitle.textContent = isAway ? `${reservation.seatId}번 외출 중` : `${reservation.seatId}번 예약 중`;
@@ -939,14 +947,27 @@ async function renderReservation() {
   returnButton.disabled = false;
 
   if (isAway) {
-    leaveButton.disabled = false;
-    leaveButton.textContent = "외출 복귀";
+    leaveButton.disabled = true;
+    leaveButton.textContent = "외출 중";
+    extendButton.disabled = false;
+    extendButton.textContent = "외출 복귀하기";
+    extendButton.classList.add("return-away-mode");
+    extensionGuide.textContent = "복귀하면 남은 예약 시간 화면으로 돌아갑니다.";
+    manageActions.classList.add("away-mode");
   } else if (reservation.hasUsedAway === true) {
     leaveButton.disabled = true;
     leaveButton.textContent = "외출 사용 완료";
+    extendButton.textContent = "연장하기";
+    extendButton.classList.remove("return-away-mode");
+    extensionGuide.textContent = "남은 시간이 1시간 이하일 때 연장할 수 있습니다.";
+    manageActions.classList.remove("away-mode");
   } else {
     leaveButton.disabled = false;
     leaveButton.textContent = "외출하기";
+    extendButton.textContent = "연장하기";
+    extendButton.classList.remove("return-away-mode");
+    extensionGuide.textContent = "남은 시간이 1시간 이하일 때 연장할 수 있습니다.";
+    manageActions.classList.remove("away-mode");
   }
 
   if (isSheetExpanded) {
@@ -1054,12 +1075,14 @@ function updateTimer() {
   const reservation = activeReservation;
 
   if (!reservation) {
+    bottomSheet.classList.remove("away-mode");
     updateTimerRing(0, RESERVATION_SECONDS);
     updateAwayTimerRing(0, AWAY_SECONDS);
     return;
   }
 
   const isAway = reservation.status === "away";
+  bottomSheet.classList.toggle("away-mode", isAway);
 
   // 열람실 남은 시간 — 외출 중에도 계속 카운트다운
   const seconds = Math.max(0, Math.floor((reservation.reservedUntil.toDate().getTime() - Date.now()) / 1000));
@@ -1078,8 +1101,15 @@ function updateTimer() {
     updateAwayTimerRing(0, AWAY_SECONDS);
   }
 
-  // 연장 버튼: 외출 중에는 비활성화 유지
-  extendButton.disabled = isAway || seconds > EXTEND_AVAILABLE_SECONDS;
+  if (isAway) {
+    extendButton.disabled = false;
+    extendButton.textContent = "외출 복귀하기";
+    extendButton.classList.add("return-away-mode");
+  } else {
+    extendButton.disabled = seconds > EXTEND_AVAILABLE_SECONDS;
+    extendButton.textContent = "연장하기";
+    extendButton.classList.remove("return-away-mode");
+  }
 
   if (seconds <= 0) {
     handleReservationExpired();
@@ -1149,6 +1179,8 @@ function enableSheetDrag(sheetElement) {
   const dragThreshold = 44;
 
   function isInteractiveTarget(target) {
+    if (!(target instanceof Element)) return false;
+
     return Boolean(
       target.closest("button") ||
       target.closest("input") ||
@@ -1397,11 +1429,19 @@ document.querySelector("#confirmReturnAwayButton")?.addEventListener("click", as
 
 extendButton.addEventListener("click", async () => {
   try {
+    if (activeReservation?.status === "away") {
+      await api.returnFromAway();
+      await refreshApp();
+      expandSheet();
+      return;
+    }
+
     await api.extendReservation();
     await refreshApp();
     expandSheet();
   } catch (error) {
     setMessage(manageMessage, error.message, "error");
+    alert(error.message);
   }
 });
 

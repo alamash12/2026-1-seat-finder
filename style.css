@@ -1225,4 +1225,131 @@ input:focus {
   stroke: var(--away) !important;
   filter: drop-shadow(0 8px 16px rgba(242, 181, 68, 0.28)) !important;
 }
- 
+
+/* requested login fit fix */
+.auth-screen {
+  padding: 20px 20px !important;
+  overflow: hidden !important;
+}
+
+.auth-screen.active {
+  display: block !important;
+}
+
+.brand-card {
+  padding: 22px 22px 20px !important;
+  border-radius: 28px !important;
+}
+
+.brand-card .brand-mark {
+  width: 46px !important;
+  height: 46px !important;
+  margin-bottom: 12px !important;
+  border-radius: 16px !important;
+}
+
+.brand-card h1 {
+  font-size: 34px !important;
+}
+
+.brand-desc {
+  margin-top: 6px !important;
+  font-size: 13px !important;
+  line-height: 1.35 !important;
+}
+
+.brand-card .eyebrow {
+  font-size: 10px !important;
+}
+
+/* requested timer ring layer/circle fix - away screen only */
+.bottom-sheet.expanded.away-mode .timer-ring {
+  aspect-ratio: 1 / 1 !important;
+  flex: 0 0 auto !important;
+  border-radius: 999px !important;
+}
+
+.bottom-sheet.expanded.away-mode .timer-svg {
+  z-index: 2 !important;
+  pointer-events: none !important;
+}
+
+.bottom-sheet.expanded.away-mode .timer-center {
+  position: relative !important;
+  z-index: 1 !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+}
+
+.bottom-sheet.expanded.away-mode .timer-track,
+.bottom-sheet.expanded.away-mode .timer-progress {
+  vector-effect: non-scaling-stroke;
+}
+
+/* away mode: the full-width button becomes the return-from-away action */
+.extend-btn.return-away-mode {
+  cursor: pointer !important;
+}
+
+/* requested compact away screen timer fix - away screen only */
+.bottom-sheet.expanded.away-mode {
+  padding-bottom: 14px !important;
+}
+
+.bottom-sheet.expanded.away-mode .manage-head {
+  margin-bottom: 4px !important;
+}
+
+.bottom-sheet.expanded.away-mode .timer-ring {
+  width: min(48vw, 190px) !important;
+  height: min(48vw, 190px) !important;
+  min-width: 170px !important;
+  min-height: 170px !important;
+  max-width: 190px !important;
+  max-height: 190px !important;
+  margin-top: 10px !important;
+  aspect-ratio: 1 / 1 !important;
+  flex: 0 0 auto !important;
+  border-radius: 999px !important;
+}
+
+.bottom-sheet.expanded.away-mode .timer-ring-away {
+  margin-top: 10px !important;
+}
+
+.bottom-sheet.expanded.away-mode .timer-center {
+  width: calc(100% - 34px) !important;
+  height: calc(100% - 34px) !important;
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 999px !important;
+}
+
+.bottom-sheet.expanded.away-mode .timer-center p {
+  margin-bottom: 4px !important;
+  font-size: 12px !important;
+}
+
+.bottom-sheet.expanded.away-mode .timer-center strong {
+  font-size: 31px !important;
+}
+
+.bottom-sheet.expanded.away-mode .timer-track,
+.bottom-sheet.expanded.away-mode .timer-progress {
+  stroke-width: 13 !important;
+}
+
+.bottom-sheet.expanded.away-mode .manage-bottom {
+  flex: 0 0 auto !important;
+  margin-top: 10px !important;
+}
+
+.bottom-sheet.expanded.away-mode .extension-guide {
+  margin-bottom: 8px !important;
+}
+
+.bottom-sheet.expanded.away-mode .extend-btn {
+  height: 52px !important;
+  margin-bottom: 10px !important;
+}
+
