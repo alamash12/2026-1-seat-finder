@@ -36,7 +36,7 @@ const db = getFirestore(firebaseApp);
 const RESERVATION_SECONDS = 6 * 60 * 60;
 const AWAY_SECONDS = 60 * 60;
 const EXTEND_AVAILABLE_SECONDS = 60 * 60;
-const DATA_VERSION = "empty-seats-v13";
+const DATA_VERSION = "empty-seats-v14";
 const MAP_ZOOM = 0.74;
 
 const ROOMS = [
